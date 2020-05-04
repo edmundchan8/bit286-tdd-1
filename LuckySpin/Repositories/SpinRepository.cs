@@ -4,7 +4,7 @@ using LuckySpin.Models;
 
 namespace LuckySpin.Repositories
 {
-    public class SpinRepository
+    public class SpinRepository : ISpinRepository
     {
         private List<Spin> spins = new List<Spin>();
 
