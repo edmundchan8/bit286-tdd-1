@@ -12,16 +12,14 @@ namespace LuckySpin.Controllers
     public class SpinnerController : Controller
     {
         private ISpinService spinService;
-        private SpinRepository spinRepository;
-        Random random = new Random();
-
+        private ISpinRepository spinRepository;
+        
         /***
          * Controller Constructor with Dependency Injection of a SpinRepository object
          */
-        public SpinnerController(SpinRepository r, ISpinService s) //TODO also inject a ISpinService object
+        public SpinnerController(ISpinRepository r, ISpinService s)
         {
             spinRepository = r;
-            //TODO: assign the spinService property the injected value
             spinService = s;
         }
 
@@ -40,11 +38,9 @@ namespace LuckySpin.Controllers
         {
             if (ModelState.IsValid) {
                 //Save the current player in the repository
-                spinRepository.CurrentPlayer = player;
-                spinRepository.CurrentPlayer.AddCredit(player.StartingBalance);
+                spinRepository.SetPlayer(player);
                 return RedirectToAction("SpinIt");
             }
-
             return View();
         }
 
@@ -52,26 +48,21 @@ namespace LuckySpin.Controllers
          * Spin Action
          **/  
          [HttpGet]      
-         public IActionResult SpinIt(int luck) //use the repository value
+         public IActionResult SpinIt(int luck) 
         {
             //Check if enough balance to play, if not drop out to LuckList
-            if (!spinRepository.CurrentPlayer.ChargeSpin())
+            if (!spinRepository.GetPlayer().ChargeSpin())
             {
                 return RedirectToAction("LuckList");
             }
+            //If a luck value is passed, use it otherwise use the saved one
+            var Luck = luck > 0 ? luck : spinRepository.GetPlayer().Luck;
 
             //Create the current Spin
-            Spin spin = new Spin
-            {
-                Luck = luck > 0 ? luck : spinRepository.CurrentPlayer.Luck,
-                A = random.Next(1, 10),
-                B = random.Next(1, 10),
-                C = random.Next(1, 10)
-            };
-            spin.IsWinning = (spin.A == spin.Luck || spin.B == spin.Luck || spin.C == spin.Luck);
+            Spin spin = spinService.SpinIt(Luck);
 
             //Use the service to compute the average wins
-            spin.averageWins = spinService.averageWins();
+            spin.AverageWins = spinService.CalculateAverage();
 
             //Add to Spin Repository
             spinRepository.AddSpin(spin);
@@ -80,13 +71,13 @@ namespace LuckySpin.Controllers
             if (spin.IsWinning)
             {
                 ViewBag.Display = "block";
-                spinRepository.CurrentPlayer.CollectWinnings();
+                spinRepository.GetPlayer().CollectWinnings();
             }
             else
                 ViewBag.Display = "none";
 
-            ViewBag.FirstName = spinRepository.CurrentPlayer.FirstName;
-            ViewBag.Balance = spinRepository.CurrentPlayer.Balance;
+            ViewBag.FirstName = spinRepository.GetPlayer().FirstName;
+            ViewBag.Balance = spinRepository.GetPlayer().Balance;
 
             return View("SpinIt", spin);
         }

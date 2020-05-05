@@ -7,13 +7,20 @@ namespace LuckySpin.Repositories
     public class SpinRepository : ISpinRepository
     {
         private List<Spin> spins = new List<Spin>();
+        private Player currentPlayer;
 
-        //Properties
-        public Player CurrentPlayer { get; set; }
+        //Player methods
+        public void SetPlayer(Player p) {
+            currentPlayer = p;
+            currentPlayer.AddCredit(p.StartingBalance);
+        }
+        public Player GetPlayer() { return currentPlayer;  }
 
-        //Methods
+        //Spin Methods
         public void AddSpin(Spin s) { spins.Add(s); }
+
         public IEnumerable<Spin> GetSpins() { return spins; }
+
         public int GetCount() { return spins.ToArray().Length; }  
     }
 }

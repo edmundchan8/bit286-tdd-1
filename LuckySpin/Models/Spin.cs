@@ -8,6 +8,6 @@ namespace LuckySpin.Models
         public int C { get; set; }
         public int Luck { get; set; }
         public Boolean IsWinning { get; set; }
-        public double averageWins { get; set; }
+        public double AverageWins { get; set; }
     }
 }

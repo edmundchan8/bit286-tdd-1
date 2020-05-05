@@ -18,7 +18,7 @@ namespace LuckySpin.Test
             var service = new SpinService(mockRepo.Object);
 
             //Act - run the method that you are testing and get a result
-            var result = service.averageWins();
+            var result = service.CalculateAverage();
 
             //Assert - check to see if the result is what was expected based on our setup
             Assert.Equal(4/10d, result);
