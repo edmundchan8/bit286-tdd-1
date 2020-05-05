@@ -17,4 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LuckySpin\LuckySpin.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
 </Project>

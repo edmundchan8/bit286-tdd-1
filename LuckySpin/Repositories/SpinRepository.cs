@@ -10,15 +10,10 @@ namespace LuckySpin.Repositories
 
         //Properties
         public Player CurrentPlayer { get; set; }
-        public IEnumerable<Spin> PlayerSpins => spins;
-        public int Length => spins.ToArray().Length;
 
-        //Interaction method
-        public void AddSpin(Spin s)
-        {
-            spins.Add(s);
-        }
-
-        
+        //Methods
+        public void AddSpin(Spin s) { spins.Add(s); }
+        public IEnumerable<Spin> GetSpins() { return spins; }
+        public int GetCount() { return spins.ToArray().Length; }  
     }
 }

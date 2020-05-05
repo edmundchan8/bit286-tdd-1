@@ -98,7 +98,7 @@ namespace LuckySpin.Controllers
          public IActionResult LuckList()
         {
             ViewBag.Balance = 0;
-            return View(spinRepository.PlayerSpins);
+            return View(spinRepository.GetSpins());
         }
 
     }
