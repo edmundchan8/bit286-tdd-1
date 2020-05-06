@@ -28,6 +28,5 @@ namespace LuckySpin.Test.TestData
         {
             return spins.ToArray().Length;
         }
-        
     }
 }
